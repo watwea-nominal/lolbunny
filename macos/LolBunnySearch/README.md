@@ -31,15 +31,17 @@ Build the app bundle, which prints the bundle path on stdout:
 nix run .#lolbunny-search-build
 ```
 
-Both recipes accept `--source` and `--derived-data`. They shell out to Xcode,
-which cannot join the Nix build sandbox, so they are host scripts rather than
+Both recipes accept `--source` and `--derived-data`, and the build also takes
+`--bundle-id` and `--display-name`, so an installer can ship this app under its
+own identity without editing the project file. They shell out to Xcode, which
+cannot join the Nix build sandbox, so they are host scripts rather than
 derivations.
 
 Move the resulting `LolBunnySearch.app` to `/Applications` and launch it once.
 Set the LolBunny address in Settings: the app ships pointed at nothing, because
 which LolBunny an install talks to belongs to that deployment rather than to
-this source tree. A managed host can seed it by writing `baseURL` into the
-`io.nominal.lolbunny-search` defaults domain.
+this source tree. A managed host can seed it by writing `baseURL` into this
+app's defaults domain, which is its bundle identifier.
 
 Keep the app running: quitting it releases the keystroke until the app starts
 again.

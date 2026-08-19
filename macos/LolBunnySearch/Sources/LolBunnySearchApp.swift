@@ -5,15 +5,24 @@ import SwiftUI
 extension Notification.Name {
     /// Broadcast when the global keystroke asks for a fresh search, so the field
     /// can clear and take focus wherever the window happens to be.
-    static let lolBunnySearchRequested = Notification.Name("io.nominal.lolbunny-search.searchRequested")
+    static let lolBunnySearchRequested = Notification.Name(
+        "\(Bundle.main.bundleIdentifier ?? "LolBunnySearch").searchRequested"
+    )
 }
 
 @main
 struct LolBunnySearchApp: App {
     @NSApplicationDelegateAdaptor(LolBunnySearchAppDelegate.self) private var delegate
 
+    /// The name this bundle was built with, so the window matches whatever an
+    /// installer chose rather than a name fixed in source.
+    private static let displayName =
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+            ?? Bundle.main.object(forInfoDictionaryKey: "CFBundleName") as? String
+            ?? "LolBunny Search"
+
     var body: some Scene {
-        Window("LolBunny - Nominal", id: "search") {
+        Window(Self.displayName, id: "search") {
             ContentView()
         }
         .windowResizability(.contentSize)
